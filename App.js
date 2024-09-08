@@ -1,65 +1,49 @@
 import React from 'react';
-import { View, Button, useWindowDimensions, StyleSheet, Image, KeyboardAvoidingView, Platform, TextInput, StatusBar, ScrollView } from 'react-native';
+import { View, Button, useWindowDimensions, StyleSheet, Image, TextInput, StatusBar, ScrollView } from 'react-native';
 
 const App = () => {
-  const { width, height } = useWindowDimensions(); // Hook để lấy kích thước màn hình
-  const isPortrait = height > width; // Xác định chế độ màn hình
+  const { width, height } = useWindowDimensions(); // Hook này tự động theo dõi sự thay đổi kích thước màn hình
+  const isPortrait = height > width;
 
-  // Điều chỉnh tỷ lệ hình ảnh dựa trên chế độ màn hình
-  const imageWidth = isPortrait ? width * 0.8 : width * 0.4; // Hình ảnh lớn hơn ở chế độ dọc
-  const imageHeight = height * (isPortrait ? 0.6 : 0.4); // Tỷ lệ chiều cao thay đổi theo hướng
+  const imageWidth = isPortrait ? width * 0.8 : width * 0.4; // Điều chỉnh kích thước ảnh theo hướng màn hình
+  const imageHeight = imageWidth * (isPortrait ? 0.6 : 0.4);
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1 }} // Đảm bảo KeyboardAvoidingView bao phủ toàn bộ màn hình
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 40 : 0}
-    >
-      <ScrollView style={{ flex: 1 }}>
-        <View style={isPortrait ? styles.portraitContainer : styles.landscapeContainer}>
-          <StatusBar
-            barStyle={isPortrait ? 'dark-content' : 'light-content'}
-            backgroundColor={isPortrait ? '#fff' : '#000'}
-          />
-          <Button title="Nút 1" style={[styles.button, { width: width / 2 }]} />
-          <Button title="Nút 2" style={[styles.button, { width: width / 2 }]} />
-          <Image
-            source={{ uri: 'https://cdn.pixabay.com/photo/2024/01/31/19/25/sunset-8544672_640.jpg' }}
-            style={{ width: imageWidth, height: imageHeight }}
-          />
-          <View style={styles.inner}>
-            <TextInput placeholder="Nhập văn bản" style={styles.textInput} />
-          </View>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <View style={isPortrait ? styles.portraitContainer : styles.landscapeContainer}>
+        <StatusBar
+          barStyle={isPortrait ? 'dark-content' : 'light-content'}
+          backgroundColor={isPortrait ? '#fff' : '#000'}
+        />
+        <Button title="Nút 1" style={[styles.button, { width: isPortrait ? width * 0.8 : width * 0.4 }]} />
+        <Button title="Nút 2" style={[styles.button, { width: isPortrait ? width * 0.8 : width * 0.4 }]} />
+        <Image
+          source={{ uri: 'https://cdn.pixabay.com/photo/2024/01/31/19/25/sunset-8544672_640.jpg' }}
+          style={{ width: imageWidth, height: imageHeight }}
+        />
+        <View style={styles.inner}>
+          <TextInput placeholder="Nhập văn bản" style={styles.textInput} />
         </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  // Bố cục khi ở màn hình dọc
   portraitContainer: {
-    flexDirection: 'column', // Hiển thị các thành phần theo chiều dọc
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
   },
-  // Bố cục khi ở màn hình ngang
   landscapeContainer: {
-    flexDirection: 'row', // Hiển thị các thành phần theo chiều ngang
+    flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     flex: 1,
   },
-  buttonContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 20,
-  },
   button: {
     margin: 10,
-    padding: 10,
-    marginBottom:10
   },
   inner: {
     //width: '100%',
