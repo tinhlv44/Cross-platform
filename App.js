@@ -37,7 +37,7 @@ const App = () => {
         keyboardVerticalOffset={width/2}
       >
         <TextInput 
-          placeholder="Nhập văn bảnd" 
+          placeholder="Nhập văn bản" 
           style={[styles.textInput, { width: isPortrait ? width * 0.8 : width * 0.2 }]}  
         />
       </KeyboardAvoidingView>
