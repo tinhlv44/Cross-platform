@@ -1,40 +1,60 @@
-import React from 'react';
-import { View, Button, useWindowDimensions, StyleSheet, Image, TextInput, StatusBar, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Button, useWindowDimensions, StyleSheet, Image, TextInput, StatusBar, Text, Platform, KeyboardAvoidingView, TouchableOpacity, Keyboard } from 'react-native';
 
 const App = () => {
-  const { width, height } = useWindowDimensions(); // Hook này tự động theo dõi sự thay đổi kích thước màn hình
+  const { width, height } = useWindowDimensions(); 
   const isPortrait = height > width;
 
-  const imageWidth = isPortrait ? width * 0.8 : width * 0.4; // Điều chỉnh kích thước ảnh theo hướng màn hình
-  const imageHeight = imageWidth * (isPortrait ? 0.6 : 0.4);
+  const imageWidth = isPortrait ? width * 0.8 : width * 0.4; 
+  const imageHeight = imageWidth * (isPortrait ? 0.8 : 0.8);
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <View style={isPortrait ? styles.portraitContainer : styles.landscapeContainer}>
-        <StatusBar
-          barStyle={isPortrait ? 'dark-content' : 'light-content'}
-          backgroundColor={isPortrait ? '#fff' : '#000'}
-        />
-        <Button title="Nút 1" style={[styles.button, { width: isPortrait ? width * 0.8 : width * 0.4 }]} />
-        <Button title="Nút 2" style={[styles.button, { width: isPortrait ? width * 0.8 : width * 0.4 }]} />
-        <Image
-          source={{ uri: 'https://cdn.pixabay.com/photo/2024/01/31/19/25/sunset-8544672_640.jpg' }}
-          style={{ width: imageWidth, height: imageHeight }}
-        />
-        <View style={styles.inner}>
-          <TextInput placeholder="Nhập văn bản" style={styles.textInput} />
-        </View>
+    <View style={[isPortrait ? styles.portraitContainer : styles.landscapeContainer]}>
+      <StatusBar
+        barStyle={isPortrait ? 'dark-content' : 'light-content'}
+        backgroundColor={isPortrait ? '#fff' : '#000'}
+      />
+      <View style={{flexDirection: !isPortrait ? 'row' : 'column'}}>
+        <TouchableOpacity style={[styles.button, { width: isPortrait ? width * 0.5 : width * 0.15 }]}>
+          <Text style={styles.text}>
+            Nút 1
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, { width: isPortrait ? width * 0.5 : width * 0.15 }]}>
+          <Text style={styles.text}>
+            Nút 2
+          </Text>
+        </TouchableOpacity>
       </View>
-    </ScrollView>
+      
+      <Image
+        source={{ uri: 'https://cdn.pixabay.com/photo/2024/01/31/19/25/sunset-8544672_640.jpg' }}
+        style={{ width: imageWidth, height: imageHeight}}
+      />
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={width/2}
+      >
+        <TextInput 
+          placeholder="Nhập văn bảnd" 
+          style={[styles.textInput, { width: isPortrait ? width * 0.8 : width * 0.2 }]}  
+        />
+      </KeyboardAvoidingView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container:{
+    //flex: 1
+  },
   portraitContainer: {
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     flex: 1,
+    //backgroundColor:'red'
   },
   landscapeContainer: {
     flexDirection: 'row',
@@ -43,21 +63,30 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   button: {
-    margin: 10,
+    padding: 8,
+    marginBottom: 8,
+    marginHorizontal: 8,
+    alignItems:'center',
+    ...Platform.select({
+      ios: {
+        backgroundColor: 'green',
+      },
+      android: {
+        backgroundColor: 'red',
+      },
+    }),
   },
-  inner: {
-    //width: '100%',
-    padding: 24,
-    justifyContent: 'center',
+  text:{
+    color:'white',
+    fontSize:20
   },
   textInput: {
     height: 40,
     borderColor: '#ddd',
     borderBottomWidth: 1,
-    marginBottom: 36,
+    marginBottom: 10,
     fontSize: 16,
-    paddingHorizontal: 10,
-    //width: '100%',
+    paddingHorizontal: 10
   },
 });
 
